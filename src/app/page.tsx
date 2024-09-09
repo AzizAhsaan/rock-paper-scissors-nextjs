@@ -101,7 +101,7 @@ console.log(houseChoice,"houseChoice");
 
 <div className="h-full flex flex-col items-center">
 <h1 className="text-white text-3xl font-semibold my-5 z-10">THE HOUSE PICKED</h1>
-{houseChoice?.color != "" && houseChoice?.image != "" && houseChoice?.name!="" && houseChoice != null ? (
+{ houseChoice != null ? (
   <>
   <div className={`bg-[${houseChoice?.color}] w-48 h-48   rounded-full flex items-center justify-center`}>
   <div style={ result == "lose" ?{ 
