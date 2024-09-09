@@ -36,7 +36,7 @@ useEffect(() => {
   return () => clearTimeout(timeoutId); 
 }, [userChoice.name,userChoice.color,userChoice.image]);
 useEffect(() => {
-  if(houseChoice ?.name == "" || houseChoice?.color == "" || houseChoice?.image == "" || houseChoice == "") return;
+  if(houseChoice ?.name == "" || houseChoice?.color == "" || houseChoice?.image == "") return;
   if(userChoice.name === houseChoice?.name){
     console.log("draw");
     setResult("draw");
