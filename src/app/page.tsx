@@ -1,101 +1,130 @@
-import Image from "next/image";
+'use client'
+import React, { useEffect } from "react";
+import Footer from "./(Public_Components)/Footer";
+import ScoreBlock from "./(Public_Components)/ScoreBlock";
+import RockPaperScissors from "./(Public_Components)/RockPaperScissors";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [score, setScore] = React.useState(0);
+  const [userChoice, setUserChoice] = React.useState({ name: "", color: "", image: "" });
+  const choices = [
+    {
+      name: "Rock",
+      color: "#d93a55",
+      image: "/icon-rock.svg",
+    },
+    {
+      name: "Paper",
+      color: "#5470f2",
+      image: "/icon-paper.svg",
+    },
+    {
+      name: "Scissor",
+      color: "#eba51e",
+      image: "/icon-scissors.svg",
+    },
+  ]
+  const [houseChoice, setHouseChoice] = React.useState<{ name: string; color: string; image: string; } | null>(null);
+  const [result, setResult] = React.useState("");
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    const random = Math.floor(Math.random() * choices.length);
+    setHouseChoice(choices[random]);
+    console.log(houseChoice,"houseChoice");
+  }, 2000);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return () => clearTimeout(timeoutId); 
+}, [userChoice.name,userChoice.color,userChoice.image]);
+useEffect(() => {
+  if(houseChoice ?.name == "" || houseChoice?.color == "" || houseChoice?.image == "" || houseChoice == "") return;
+  if(userChoice.name === houseChoice?.name){
+    console.log("draw");
+    setResult("draw");
+  }
+  if(userChoice.name === "Rock" && houseChoice?.name === "Scissor"){
+    console.log("win");
+    setResult("win");
+    setScore(score + 1);
+  }
+  if(userChoice.name === "Rock" && houseChoice?.name === "Paper"){
+    console.log("lose");
+    setResult("lose");
+  }
+  if(userChoice.name === "Paper" && houseChoice?.name === "Rock"){
+    console.log("win");
+    setResult("win");
+    setScore(score + 1);
+  }
+  if(userChoice.name === "Paper" && houseChoice?.name === "Scissor"){
+    console.log("lose");
+    setResult("lose");
+  }
+  if(userChoice.name === "Scissor" && houseChoice?.name === "Paper"){
+    console.log("win");
+    setResult("win");
+    setScore(score + 1);
+
+  }
+  if(userChoice.name === "Scissor" && houseChoice?.name === "Rock"){
+    console.log("lose");
+    setResult("lose");
+  }
+
+}, [houseChoice]);
+console.log(houseChoice,"houseChoice");
+  return (
+    <div className="h-screen w-full bg-background-radial">
+      <div className="h-full w-full flex justify-center ">
+        <div className="size-full  my-5 flex flex-col items-center ">
+        <ScoreBlock score={score} />
+        {userChoice.color != "" && userChoice.name != "" && userChoice.image != "" ? (
+          <>
+<div className=" flex flex-row justify-between gap-24 mt-12">
+  <div className="h-full flex flex-col items-center">
+    <h1 className="text-white text-3xl font-semibold my-5 z-10">YOU PICKED</h1>
+<div className={`bg-[${userChoice.color}] w-48 h-48   rounded-full flex items-center justify-center`}>
+  <div style={ result == "win" ?{ 
+        boxShadow: `  0 0 0px 25px ${userChoice.color},0 0 0px 70px #283150,0 0 0px 100px #2B3457,  0 0 0px 140px #30395B80` 
+      } : undefined} className="shadow-inner  p-4 w-40 h-40 rounded-full border-t-[7px] border-[#b9bed3a9] bg-white flex items\ justify-center">
+    <img src={userChoice.image} className='w-[70px] h-[70px] my-auto' alt='icon-rock.svg'/> 
+  </div>
+</div>
+</div>
+{result != ""&& (
+  <div className=" h-full flex flex-col items-center justify-center ">
+<h1 className="text-white text-4xl font-bold my-5">{result == "lose" ? 'YOU LOSE' : result =="win"  ?'YOU WIN' : "DRAW"}</h1>
+<button onClick={() => {setHouseChoice({name:"",color:"",image:""}),setUserChoice({name:"",color:"",image:""}),setResult("")}} className={`py-4 px-12 bg-white tracking-widest rounded-lg ${result == "lose" ? "text-red-500":"text-black"}`}>
+  PLAY AGAIN
+</button>
+</div>
+)}
+
+<div className="h-full flex flex-col items-center">
+<h1 className="text-white text-3xl font-semibold my-5 z-10">THE HOUSE PICKED</h1>
+{houseChoice?.color != "" && houseChoice?.image != "" && houseChoice?.name!="" && houseChoice != null ? (
+  <>
+  <div className={`bg-[${houseChoice?.color}] w-48 h-48   rounded-full flex items-center justify-center`}>
+  <div style={ result == "lose" ?{ 
+        boxShadow: `  0 0 0px 25px ${houseChoice.color},0 0 0px 70px #283150,0 0 0px 100px #2B3457,  0 0 0px 140px #30395B80` 
+      } : undefined} className="shadow-inner  p-4 w-40 h-40 rounded-full border-t-[7px] border-[#b9bed3a9] bg-white flex items\ justify-center">
+    <img src={houseChoice?.image} className='w-[70px] h-[70px] my-auto' alt='icon-rock.svg'/> 
+  </div>
+</div></>
+):(
+  <div className="w-48 h-48 bg-[#182341] rounded-full"></div>
+)}
+
+</div>
+</div>
+
+</>
+        ):(
+          <RockPaperScissors onClick={setUserChoice}  />
+
+        )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+<Footer />
     </div>
   );
 }
